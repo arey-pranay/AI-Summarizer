@@ -1,0 +1,40 @@
+Create the project with vite: npm create vite@latest
+dpendency: npm install @reduxjs/toolkit react-redux
+Install tailwind from https://tailwindcss.com/docs/guides/vite
+
+          //Using React Redux Toolkit
+
+import {Provider} from 'react-redux'
+in the main.jsx,wrap your <App/> in <Provider> </Provider>
+create a store.js file in a services folder and import {configureStore} from '@reduxjs/toolkit';
+and export const store = configureStore({
+ reducer : {[articleApi.reducerPath]:articleApi.reducer}
+middleware: (getDefaultMiddleware)=>getDefaultMiddleware().concat(articleApi.middleware)
+});
+//think of the state of the global store as the whole cake, reducer allows us to get a slice of the cake
+//middleware allows us to do something with the state before we get it
+
+Let's create the service in/called article.js
+import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react'
+/*         Put the const options from the RapidAPI site        */ and remember to protect the imp links e.g. rapid API key in the.env file as an environment varbl hn
+
+export const articleApi = createApi({
+    reducerPath: 'articleApi',
+    baseQuery: fetchBaseQuery({
+      baseUrl: 'https://article-extractor-and-summarizer.p.rapidapi.com/'
+    , prepareHeader: (headers)=>{
+        headers.set('X-RapidAPI-Key', rapidApiKey);
+        headers.set('X-RapidAPI-Host', 'article-extractor-and-summarizer.p.rapidapi.com)'
+        return headers;
+      }
+    })
+    endpoints: (builder) => ({
+      getSummary: builder.query({
+        query: (params) => `/summarize?url=${encodeURIComponent(params.articleUrl) }&length=3`
+      )}
+  })
+});
+export const { useLazyGetSummaryQuery } = articleApi;
+Now you can import {store} from './services/store' and pass it as a prop or an attribute to Provider
+<Provider store={store}><App/><Provider>
+
