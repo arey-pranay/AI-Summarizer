@@ -1,0 +1,18 @@
+useEffect(()={
+  const articlesFromLocalStorage = JSON.parse(
+    localStorage.getItem('articles')
+  )
+  if (articlesFromLocalStorage){
+    setAllArticles(articlesFromLocalStorgae)
+  }
+ }, []);
+
+
+and to add items to local storage
+localStorage.setItem('articles',JSON.stringify(updatedAllArticles));
+
+and to copy from the history, put this event or trigger this event onClick of the the copy bun
+const handleCopy = (copyUrl) =>{
+  setCopied(copyUrl);
+  navigator.clipboard.writeText(copyUrl);
+}
